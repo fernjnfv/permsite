@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Путешествуй со вкусом</title>
+ <link rel="stylesheet" href="full_style.css">
+</head>
+<body>
+ <aside class="left-panel">
+ <div class="title-area">
+ <h1>Путешествуем со вкусом</h1>
+ <h2>Гастрономическая карта Пермского края</h2>
+ </div>
+ 
+ <div class="controls">
+ <div class="button-group">
+ <h3>Районы с преобладанием:</h3>
+ <div class="buttons-container">
+ <button class="region-button" data-type="russian">Русского населения</button>
+ <button class="region-button" data-type="komi">Коми пермяцкого населения</button>
+ <button class="region-button" data-type="tatar">Татарского населения</button>
+ </div>
+ </div>
+ <div class="button-group">
+ <h3>Преобладание русского населения со значительным присутствием:</h3>
+ <div class="buttons-container">
+ <button class="region-button" data-type="turkic">Татар, башкир</button>
+ <button class="region-button" data-type="finno-ugric">Коми пермяков, удмуртов, манси</button>
+ <button class="region-button" data-type="turkic-finno">смешенное население</button>
+ </div>
+ </div>
+
+ <div class="selection-container">
+ <label for="city">Город:</label>
+ <select id="city">
+ <option value="" selected disabled>Выберите город</option>
+ <option value="chaikovsky">Чайковский</option>
+ </select>
+
+ <label for="restaurant">Ресторан:</label>
+ <select id="restaurant">
+ <option value="" selected disabled>Выберите ресторан</option>
+ <option value="chaikovsky1">Ресторан 'Чайковский'</option>
+ </select>
+ </div>
+
+ <button id="resetButton" class="reset">Сбросить</button>
+ </div>
+
+ <section class="info">
+ <h3>Информация</h3>
+ </section>
+<span class="pb9OtnTX"><a href="https://www.ucoz.ru/" title="Сайт создан при помощи uCoz" target="_blank" rel="nofollow">uCoz</a></span>
+ </aside>
+ 
+ <main class="map-container">
+ <img id="regionImage" src="Perms.png" alt="Карта Пермского края">
+ <canvas id="mapCanvas"></canvas>
+ </main>
+</body>
+<script src="regions_info.js"></script>
+<script src="restoran_info.js"></script>
+<script src="image_narod_sicher.js"></script>
+<script src="mapinter.js"></script>
+<script src="buttons.js"></script>
+<script src="all_parts.js"></script>
+<script src="info_update.js"></script>
+<script src="restouran.js"></script>
+
+</html>
