@@ -13,13 +13,41 @@
  display: flex;
  flex-direction: column;
  justify-content: space-between;
- border-right: 3px solid #8b4513;
+ /*border-right: 3px solid #8b4513;*/
  box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2);
  padding: 20px;
+ overflow: hidden;
  }
+ 
+.vertical-resizer {
+  position: relative;
+  width: 2px; /* реальная линия */
+  background: #8b4513;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+}
+
+/* Невидимая зона вокруг линии */
+.vertical-resizer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -5px; /* половина зоны */
+  width: 13px; /* 3px линия + 10px зона */
+  height: 100%;
+  cursor: ew-resize;
+  background: transparent;
+  z-index: 20;
+}
+
+.vertical-resizer:hover {
+  background: #a0522d;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.5);
+}
 
  .title-area {
  margin-bottom: 20px;
+ flex: 0 0 auto;
  }
 
  h1 {
@@ -38,11 +66,13 @@
  display: flex;
  flex-direction: column;
  align-items: flex-start;
- border-bottom: 3px solid #8b4513;
+ /*border-bottom: 3px solid #8b4513;*/
  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
  padding-bottom: 15px;
  padding-left: 10px;
  padding-top: 10px;
+ flex: 0 0 auto;
+ overflow: auto;
  }
 
  .button-group {
@@ -89,6 +119,25 @@
  background: #ff6347;
  }
 
+.horizontal-resizer {
+  position: relative;
+  height: 2px;
+  background: #8b4513;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.horizontal-resizer::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  height: 13px; /* 3px линия + 10px зона */
+  width: 100%;
+  cursor: ns-resize;
+  background: transparent;
+  z-index: 20;
+}
+
  .selection-container {
  display: flex;
  align-items: center;
@@ -112,9 +161,10 @@
  }
 
  .info {
- flex-grow: 1;
+ flex: 1 1 auto;
  overflow-y: auto;
  padding-top: 10px;
+ min-height: 0;
  }
 
  .map-container {
@@ -124,7 +174,7 @@
  align-items: center;
  }
 
- #regionImage {
+ #nameImage {
  width: auto;
  max-width: 600px;
  max-height: 10vh;
@@ -235,7 +285,7 @@ justify-content: center;
  }
 
  .carousel img.center {
- z-index: 2; /* Ð¦ÐµÐ½Ñ‚Ñ€Ð°Ð»ÑŒÐ½Ð°Ñ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ° Ð²ÑÐµÐ³Ð´Ð° ÑÐ²ÐµÑ€Ñ…Ñƒ */
+ z-index: 2; 
  }
 
  .carousel img.left {
@@ -257,7 +307,7 @@ justify-content: center;
  padding: 10px;
  cursor: pointer;
  transition: 0.3s;
- z-index: 3; /* Ð¡Ñ‚Ñ€ÐµÐ»ÐºÐ¸ Ð¿Ð¾Ð²ÐµÑ€Ñ… Ð²ÑÐµÐ³Ð¾ */
+ z-index: 3; 
  }
 
  .carousel-btn:hover {
@@ -272,7 +322,7 @@ justify-content: center;
  right: 5%;
  }
 
-/* Ð‘Ð»Ð¾Ðº Ð¿Ñ€ÐµÐ²ÑŒÑŽ Ð¼ÐµÐ½ÑŽ */
+
 .menu-preview {
  display: flex;
  flex-direction: column;

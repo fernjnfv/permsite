@@ -1,16 +1,14 @@
 const canvas = document.getElementById("mapCanvas");
 const ctx = canvas.getContext("2d");
 
-const mapImage = new Image();
-mapImage.src = "risunok2.png"; // Файл карты
-const chaikImage = new Image();
-chaikImage .src = "chaik_map.png"; // Файл карты
-const menuimage = new Image();
-menuimage .src = "menu_image.jpg"; // Файл карты
+const mapImage = new Image(); // карта Пермского края
+mapImage.src = "risunok2.png"; 
+const currentTownImage = new Image(); // карта города
+currentTownImage.src = "town_map.png"; 
+const currentMenuImage = new Image(); // изображение меню
+currentMenuImage .src = "menu_image.jpg"; 
 
-const contrastmapImage= new Image();
-contrastmapImage.src = "risunok2_up.png"; // Файл карты контрастный
-const regionImage = document.getElementById("regionImage");
+const NameImage = document.getElementById("nameImage");
 
 let hovered = false;
 let curscale = 1.0
@@ -30,6 +28,8 @@ let curr_map = 1
 let scale = 1
 let scale1 = 1
 
+let selectedTown = null;
+
 canvas.addEventListener("mousemove", (event) => {
     if (hovered){
 		hovered_old = true}
@@ -42,8 +42,8 @@ canvas.addEventListener("mousemove", (event) => {
 		ctx.translate(x, y);
 		ctx.scale(curscale ,curscale )
 		hovered_region_old =  hovered_region
-		for(let i=0; i<46; i++){
-			hovered = ctx.isPointInPath(all_region[i], offsetX, offsetY);
+		for(let i=0; i<all_region.length; i++){
+			hovered = ctx.isPointInPath(all_region[i], offsetX*scale2, offsetY*scale2);
 			if (hovered){
 				hovered_region = all_region[i]
 				break;
@@ -62,7 +62,7 @@ canvas.addEventListener("mousemove", (event) => {
 			ctx.translate(x1, y1);
 			ctx.scale(scale1 ,scale1 )
 			ctx.rect(dish.x, dish.y, dish.width, dish.height);
-			hovered = ctx.isPointInPath(offsetX, offsetY);
+			hovered = ctx.isPointInPath(offsetX*scale2, offsetY*scale2);
 			ctx.restore();
 			if (hovered){
 				draw();
@@ -98,10 +98,18 @@ canvas.addEventListener("click", (event) => {
 		ctx.save();
 		ctx.translate(x, y);
 		ctx.scale(curscale ,curscale )
-		let clicked= ctx.isPointInPath(chaik , offsetX, offsetY);
+		let clicked = false
+		for(let i=0; i<all_regions_town.length; i++) { 
+			clicked= ctx.isPointInPath(all_regions_town[i].region , offsetX*scale2, offsetY*scale2);
+			if (clicked){
+				selectedTown = all_regions_town[i];
+				break;
+			}
+		}
 		ctx.restore();
 		if (clicked){
-			openChaik()
+			openTownMap()
+			updateCitySelectorMenu()
 		}
     }
 })
@@ -119,7 +127,7 @@ canvas.addEventListener("click", (event) => {
             ctx.translate(x1, y1);
             ctx.scale(scale1 ,scale1 )
             ctx.rect(dish.x, dish.y, dish.width, dish.height);
-            let clicked= ctx.isPointInPath(offsetX, offsetY);
+            let clicked= ctx.isPointInPath(offsetX*scale2, offsetY*scale2);
             ctx.restore();
             if (clicked){
                 draw();
@@ -131,30 +139,56 @@ canvas.addEventListener("click", (event) => {
 })
 
 
-function openChaik(){
-	 curimage = chaikImage 
-	 curr_map = 2
-	 hovered = false
-	 regionImage.src = "Chaik_letters.png"; 
-	 draw();
+function setTownMap(){
+	curimage = currentTownImage 
+	curr_map = 2
+	hovered = false
+	NameImage.src = selectedTown.label_image; 
+	draw();
 }
+
+function openTownMap(){
+	currentTownImage.src = selectedTown.map_image; 
+	currentTownImage.onload = () => {
+	 setTownMap()
+	};
+	if (currentTownImage.complete) {
+	 currentTownImage.onload();
+	}
+}
+
+function updateCitySelectorMenu(){
+	citySelect.value = selectedTown.town_id
+	updateRestoranSelectList()
+}
+
+function updateResouranSelectorMenu(){
+	restaurantSelect.value = selectedRestaurant.id
+}
+
+let scale2 = 1.0
 
 function setCanvasSize() {
     const container = canvas.parentElement;
-    canvas.height = canvas.offsetHeight;
-    canvas.width = canvas.clientWidth;
+	temp_Height = canvas.clientHeight / curimage.naturalHeight
+	temp_Width = canvas.clientWidth / curimage.naturalWidth
+	scale2 = 1/Math.min(temp_Height, temp_Width)
+    canvas.height = canvas.clientHeight*scale2;
+    canvas.width = canvas.clientWidth*scale2;
 }
 
 function draw() {
+	console.log("draw")
+	setCanvasSize();// Устанавливаем фиксированный размер с учетом текущего изображения
 	switch (curr_map ) {
 		case 1:
-			drawFirst();
+			drawRegion();
 			break;
 		case 2:
-			drawSecond();
+			drawTown();
 			break;
 		case 3:
-			DrawTherd()
+			DrawMenu()
 			break;
 		default:
 			alert( "Нет таких значений" );
@@ -167,7 +201,6 @@ function drawBacground()
     const imageHeight = curimage.naturalHeight;
     // Рассчитываем масштаб для сохранения пропорций
     scale = Math.min(canvas.width / imageWidth, canvas.height / imageHeight);
-
     // Вычисляем итоговые размеры изображения
     displayWidth = imageWidth * scale;
     displayHeight = imageHeight * scale;
@@ -176,13 +209,12 @@ function drawBacground()
     x = (canvas.width- displayWidth) / 2;
     y = (canvas.height - displayHeight) / 2;
 
-    //curscale = canvas.height / 402.0
-    curscale = imageHeight*scale/ 402.0
+    curscale = displayHeight/ 402.0
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(curimage , x, y, displayWidth , displayHeight ); // Фоновая карта
 }
 
-function drawFirst()
+function drawRegion()
 {
 	drawBacground()
 	if (hovered) {
@@ -212,13 +244,13 @@ function drawFirst()
 	}
 }
 
-function drawSecond()
+function drawTown()
 {
 	drawBacground()
 	drawMap()
 }
 
-function DrawTherd(){
+function DrawMenu(){
 	ctx.save();
 	ctx.fillStyle = "rgba(0, 0, 0, 0.6)";
 	ctx.globalCompositeOperation = "destination-out";
@@ -227,8 +259,8 @@ function DrawTherd(){
 	ctx.drawImage(mapImage, x, y, displayWidth , displayHeight ); 
 	ctx.restore();
 
-	const imageWidth = menuimage .naturalWidth;
-	const imageHeight = menuimage .naturalHeight;
+	const imageWidth = currentMenuImage.naturalWidth;
+	const imageHeight = currentMenuImage.naturalHeight;
 	// Рассчитываем масштаб для сохранения пропорций
 	scale1 = Math.min(canvas.width / imageWidth, canvas.height / imageHeight);
 
@@ -240,9 +272,8 @@ function DrawTherd(){
 	x1 = (canvas.width- displayWidth1) / 2;
 	y1 = (canvas.height - displayHeight1) / 2;
 
-	//curscale = canvas.height / 402.0
 	curscale = imageHeight*scale/ 402.0
-	ctx.drawImage(menuimage, x1, y1, displayWidth1 , displayHeight1 ); // Фоновая карта
+	ctx.drawImage(currentMenuImage, x1, y1, displayWidth1 , displayHeight1 ); // Фоновая карта
 	selectedRestaurant.dishes.forEach(dish=> {
 		ctx.save();
 		ctx.strokeStyle = "rgba(256, 0, 0, 0.2)";
@@ -321,7 +352,7 @@ function drawselectedregion(region){
 function resetdraw(){
     curimage = mapImage
     curr_map = 1
-    regionImage.src = "Perms.png"; 
+    NameImage.src = "Perms.png"; 
     draw()
 }
 
@@ -329,12 +360,18 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
 		mapImage.onload = () => {
 			curimage = mapImage
-			setCanvasSize(); // Устанавливаем фиксированный размер
 			draw();
 		};
 		if (mapImage.complete) {
 			mapImage.onload();
 		}
+		const observer = new ResizeObserver(() => {
+		  console.log("error")
+		  draw();
+		});
+		observer.observe(canvas.parentElement);
     }, 0); // Минимальная задержка, чтобы дать браузеру отрендерить макет
 });
+
+
 

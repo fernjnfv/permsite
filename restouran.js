@@ -22,7 +22,7 @@ function draw_logo(rest ){
 
 function drawMap() {
     ctx.save();
-	restaurants.forEach(rest => {
+	selectedTown.town_restorans.forEach(rest => {
 		img.onload = () => {
 			draw_logo(rest )
 		};
@@ -31,6 +31,8 @@ function drawMap() {
 		}
 	});
 }
+
+
 
 function updateRestaurantInfo() {
     const infoBlock = document.querySelector(".info");
@@ -44,9 +46,6 @@ function updateRestaurantInfo() {
 			<div class="carousel-container">
 				<button class="carousel-btn left-btn">&lt;</button>
 				<div class="carousel">
-					<img src="img1.jpg" class="carousel-image side left">
-					<img src="img2.jpg" class="carousel-image center">
-					<img src="img3.jpg" class="carousel-image side right">
 				</div>
 				<button class="carousel-btn right-btn">&gt;</button>
 			</div>
@@ -58,25 +57,67 @@ function updateRestaurantInfo() {
         </div>
     `;
 
-	let images = document.querySelectorAll(".carousel-image");
-    let order = [0, 1, 2]; // Индексы фотографий в текущем порядке
+	function loadCarousel() {
+		const carousel = document.querySelector(".carousel");
+		carousel.innerHTML = ""; // Очистка старых изображений
 
-    document.querySelector(".right-btn").addEventListener("click", () => {
-        order.unshift(order.pop()); // Сдвиг массива вправо
-        updateCarousel();
-    });
+		// Создаем картинки
+		selectedRestaurant.images.forEach((src, i) => {
+			const img = document.createElement("img");
+			img.src = src;
+			img.classList.add("carousel-image");
+			carousel.appendChild(img);
+		});
 
-    document.querySelector(".left-btn").addEventListener("click", () => {
-        order.push(order.shift()); // Сдвиг массива влево
-        updateCarousel();
-    });
+		// Обновляем ссылки на картинки
+		images = document.querySelectorAll(".carousel-image");
+		order = selectedRestaurant.images.map((_, i) => i);
 
-    function updateCarousel() {
-        images.forEach(img => img.classList.remove("center", "side", "left", "right"));
-        images[order[0]].classList.add("side", "left");
-        images[order[1]].classList.add("center");
-        images[order[2]].classList.add("side", "right");
-    }
+		updateCarousel();
+	}
+
+	// Логика смены фото
+	function updateCarousel() {
+		if (!images.length) return;
+
+		images.forEach(img => img.classList.remove("center", "side", "left", "right", "hidden"));
+
+		if (images.length === 1) {
+			// Только одна фотография — центр
+			images[0].classList.add("center");
+			return;
+		}
+
+		if (images.length === 2) {
+			// Две фотографии — левая и центральная
+			images[order[0]].classList.add("side", "left");
+			images[order[1]].classList.add("center");
+			return;
+		}
+
+		// Три и более — классическая расстановка
+		images[order[0]].classList.add("side", "left");
+		images[order[1]].classList.add("center");
+		images[order[2]].classList.add("side", "right");
+
+		// Остальные прячем (если 4+)
+		for (let i = 3; i < images.length; i++) {
+			images[order[i]].classList.add("hidden");
+		}
+	}
+
+	// Слушатели стрелок
+	document.querySelector(".right-btn").addEventListener("click", () => {
+		if (images.length <= 1) return;
+		order.unshift(order.pop());
+		updateCarousel();
+	});
+
+	document.querySelector(".left-btn").addEventListener("click", () => {
+		if (images.length <= 1) return;
+		order.push(order.shift());
+		updateCarousel();
+	})
 
 
     document.getElementById("menuButton").addEventListener("click", () => {
@@ -84,25 +125,29 @@ function updateRestaurantInfo() {
 		curr_map = 3        
 		draw();
     });
-
+	
+    loadCarousel();
 }
 
 
 canvas.addEventListener("click", (event) => {
-	const { offsetX, offsetY } = event;
-	ctx.save();
-	ctx.translate(x, y);
-	ctx.scale(scale ,scale )
-	restaurants.forEach(rest => {
-		ctx.translate(rest.x, rest.y);
-		hovered = ctx.isPointInPath(iconPath, offsetX, offsetY);
-		if (hovered ){
-			selectedRestaurant = rest;
-			updateRestaurantInfo()
-		}
-		ctx.translate(-rest.x, -rest.y);
-	});
-	ctx.restore();
+	if(curr_map == 2){
+		const { offsetX, offsetY } = event;
+		ctx.save();
+		ctx.translate(x, y);
+		ctx.scale(scale ,scale )
+		selectedTown.town_restorans.forEach(rest => {
+			ctx.translate(rest.x, rest.y);
+			hovered = ctx.isPointInPath(iconPath, offsetX*scale2, offsetY*scale2);
+			if (hovered ){
+				selectedRestaurant = rest;
+				updateRestaurantInfo()
+				updateResouranSelectorMenu()
+			}
+			ctx.translate(-rest.x, -rest.y);
+		});
+		ctx.restore();
+	}
 });
 
 

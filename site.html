@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Путешествуй со вкусом</title>
+ <link rel="stylesheet" href="full_style.css">
+</head>
+<body>
+ <aside class="left-panel">
+ <div class="title-area">
+ <h1>Путешествуем со вкусом</h1>
+ <h2>Гастрономическая карта Пермского края</h2>
+ </div>
+ 
+ <div class="controls">
+ <div class="button-group">
+ <h3>Районы с преобладанием:</h3>
+ <div class="buttons-container">
+ <button class="region-button" data-type="russian">Русского населения</button>
+ <button class="region-button" data-type="komi">Коми пермяцкого населения</button>
+ <button class="region-button" data-type="tatar">Татарского населения</button>
+ </div>
+ </div>
+ <div class="button-group">
+ <h3>Преобладание русского населения со значительным присутствием:</h3>
+ <div class="buttons-container">
+ <button class="region-button" data-type="turkic">Татар, башкир</button>
+ <button class="region-button" data-type="finno-ugric">Коми пермяков, удмуртов, манси</button>
+ <button class="region-button" data-type="turkic-finno">смешенное население</button>
+ </div>
+ </div>
+
+ <div class="selection-container">
+ <label for="city">Город:</label>
+ <select id="city">
+ <option value="" selected disabled>Выберите город</option>
+ </select>
+
+ <label for="restaurant">Ресторан:</label>
+ <select id="restaurant" disabled>
+ <option value="" selected disabled>Сначала выберите город</option>
+ </select>
+ </div>
+
+ <button id="resetButton" class="reset">Сбросить</button>
+ </div>
+ <div class="horizontal-resizer"></div>
+ <section class="info">
+ <h3>Информация</h3>
+ </section>
+ </aside>
+ <div class="vertical-resizer"></div>
+ <main class="map-container">
+ <img id="nameImage" src="Perms.png" alt="Карта Пермского края">
+ <canvas id="mapCanvas"></canvas>
+ </main>
+</body>
+<script src="regions_info.js"></script>
+<script src="restoran_info.js"></script>
+<script src="image_narod_sicher.js"></script>
+<script src="mapinter.js"></script>
+<script src="buttons.js"></script>
+<script src="resizer.js"></script>
+<script src="all_parts.js"></script>
+<script src="towns.js"></script>
+<script src="info_update.js"></script>
+<script src="restouran.js"></script>
+</html>

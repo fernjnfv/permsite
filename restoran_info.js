@@ -60,7 +60,7 @@ recipe_dish2 = `
   </div>
     `;
 
-const restaurants = [
+/* const restaurants = [
 	{
 		x: 524, y: 395, // Относительные координаты значка ресторана
 		width: 30, height: 30, // Размер
@@ -75,4 +75,20 @@ const restaurants = [
 			{ name: "Рецепт 'Посикунчики мясные'", x: 77, y: 765, width: 458, height: 34, img: "dish2.jpg", recipe: recipe_dish2},
 		]
 	},
-]
+] */
+
+Tchaikovsky_restaurant = {
+	    id: "Tchaikovsky_rest",
+		x: 524, y: 395, // Относительные координаты значка ресторана
+		width: 30, height: 30, // Размер
+		name: "Ресторан 'Чайковский'",
+		address: "ул. Мира, 7, Чайковский",
+		phone: "+7 (34241) 4-00-40",
+		hours: "10:00 - 23:00",
+		images: ["img1.jpg", "img2.jpg", "img3.jpg"] , // Картинки карусели
+		menuImage: "menu_closed.jpg", // Картинка закрытого меню
+		dishes: [ // Координаты областей блюд в меню
+			{ name: "Рецепт 'Щучьи котлеты с картофельным кремом'", x: 654, y: 119, width: 446, height: 48, img: "dish1.jpg", recipe: recipe_dish1},
+			{ name: "Рецепт 'Посикунчики мясные'", x: 77, y: 765, width: 458, height: 34, img: "dish2.jpg", recipe: recipe_dish2},
+		]
+	}
