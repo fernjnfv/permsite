@@ -360,15 +360,15 @@ document.addEventListener("DOMContentLoaded", () => {
     setTimeout(() => {
 		mapImage.onload = () => {
 			curimage = mapImage
+			const observer = new ResizeObserver(() => {
+			  console.log("error")
+			  draw();
+		    });
 			draw();
 		};
 		if (mapImage.complete) {
 			mapImage.onload();
 		}
-		const observer = new ResizeObserver(() => {
-		  console.log("error")
-		  draw();
-		});
 		observer.observe(canvas.parentElement);
     }, 0); // Минимальная задержка, чтобы дать браузеру отрендерить макет
 });
