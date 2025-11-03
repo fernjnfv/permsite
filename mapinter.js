@@ -363,13 +363,14 @@ document.addEventListener("DOMContentLoaded", () => {
 			const observer = new ResizeObserver(() => {
 			  console.log("error")
 			  draw();
-		    });
+			});
+			observer.observe(canvas.parentElement);
 			draw();
 		};
 		if (mapImage.complete) {
 			mapImage.onload();
 		}
-		observer.observe(canvas.parentElement);
+
     }, 0); // Минимальная задержка, чтобы дать браузеру отрендерить макет
 });
 
